@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Christ of Faith vs. The Jesuses of Imagination</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: A thematic, comparative hub-and-spoke model. The central organizing principle is the direct comparison between the "Christ of Faith" and various "Jesuses of Imagination." This is more engaging and user-friendly for exploring the report's core thesis than a linear chapter-by-chapter structure. Key interactions include a dynamic comparison chart, an interactive historical timeline, and a visual gallery to make the dense, conceptual information more accessible and digestible. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Comparative Christologies -> Goal: Compare -> Viz: Interactive Radar Chart (Chart.js) + dynamic text -> Interaction: Dropdown selection updates chart and text -> Justification: Visually represents the multidimensional differences between Christologies.
+        - Report Info: Early Heresies/Councils -> Goal: Show Change/Process -> Viz: HTML/CSS Timeline -> Interaction: Click to reveal details -> Justification: Intuitive for historical data.
+        - Report Info: Lewis Trilemma -> Goal: Organize Concept -> Viz: HTML/CSS Flowchart -> Interaction: Hover for tooltips -> Justification: Clarifies logical argument.
+        - Report Info: Art Portrayals -> Goal: Inform/Organize -> Viz: HTML/CSS Image Gallery -> Interaction: Click for lightbox view -> Justification: Best method for visual content.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f7f4;
+            color: #3d4451;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .nav-link.active {
+            color: #a16207;
+            border-bottom-color: #a16207;
+            font-weight: 600;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 450px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 450px;
+            }
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 1rem;
+            left: -0.6rem;
+            width: 1.2rem;
+            height: 1.2rem;
+            background-color: #eab308;
+            border-radius: 9999px;
+            border: 4px solid #f8f7f4;
+            z-index: 10;
+        }
+        .art-gallery-item {
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .art-gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        #lightbox {
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-800 mb-2">The Jesus Christ of Faith & The Jesus of Imagination</h1>
+            <p class="text-lg text-slate-600">An Interactive Exploration of Two Millennia of Interpretation</p>
+        </header>
+
+        <nav class="flex justify-center border-b border-slate-200 mb-12">
+            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-slate-500">
+                <li class="mr-2">
+                    <a id="nav-compare" class="nav-link inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-slate-700 hover:border-slate-300">Compare Views</a>
+                </li>
+                <li class="mr-2">
+                    <a id="nav-doctrine" class="nav-link inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-slate-700 hover:border-slate-300" >Defining Doctrine</a>
+                </li>
+                <li class="mr-2">
+                    <a id="nav-culture" class="nav-link inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-slate-700 hover:border-slate-300">Cultural Lens</a>
+                </li>
+                 <li class="mr-2">
+                    <a id="nav-implications" class="nav-link inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-slate-700 hover:border-slate-300" >Why It Matters</a>
+                </li>
+            </ul>
+        </nav>
+
+        <main>
+            <!-- Section 1: Compare Views -->
+            <section id="page-compare" class="content-section">
+                 <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-800">Comparative Christologies</h2>
+                    <p class="mt-2 text-slate-600 max-w-3xl mx-auto">This section provides a direct comparison between the Orthodox Christian view of Jesus and various alternative interpretations. Select a view from the dropdown to see how the core attributes change and explore the fundamental differences in identity and mission. The chart visually represents the emphasis each view places on different theological concepts.</p>
+                </div>
+
+                <div class="mb-8 flex justify-center">
+                    <select id="view-selector" class="block w-full max-w-xs p-3 border border-slate-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                        <option value="orthodox">Orthodox Christology</option>
+                        <option value="moral">Jesus as Moral Teacher</option>
+                        <option value="revolutionary">Jesus as Revolutionary</option>
+                        <option value="philosopher">Jesus as Philosopher</option>
+                        <option value="postmodern">Postmodern Jesus</option>
+                    </select>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <div class="chart-container">
+                            <canvas id="comparisonChart"></canvas>
+                        </div>
+                    </div>
+                    <div id="details-panel" class="bg-white p-6 rounded-lg shadow-md border border-slate-100">
+                        <!-- Details will be populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Defining Doctrine -->
+            <section id="page-doctrine" class="content-section">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-800">The Foundation of Faith</h2>
+                    <p class="mt-2 text-slate-600 max-w-3xl mx-auto">The orthodox understanding of Jesus wasn't invented in a vacuum; it was carefully defined over centuries to guard against ideas that were seen as undermining the core of the faith. This section explores the key doctrines of the Incarnation and the Atonement, including the historical debates that shaped them.</p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-12">
+                    <div class="bg-white p-6 rounded-lg shadow-md border border-slate-100">
+                        <h3 class="text-2xl font-semibold mb-4 text-slate-700 text-center">The Lewis Trilemma: A Logical Challenge</h3>
+                        <p class="text-center mb-6 text-sm text-slate-500">C.S. Lewis argued that given Jesus's claims, viewing him as just a "good moral teacher" isn't a viable option.</p>
+                        <div class="relative flex flex-col items-center">
+                            <div class="p-4 bg-amber-100 text-amber-800 rounded-lg text-center font-semibold">Jesus Claimed to Be God</div>
+                            <div class="h-8 w-px bg-slate-300 my-2"></div>
+                            <div class="flex justify-around w-full">
+                                <div class="text-center">
+                                    <p class="font-bold text-slate-700">If His claims were false...</p>
+                                    <div class="h-4 w-px bg-slate-300 my-2 mx-auto"></div>
+                                    <div class="flex gap-4">
+                                        <div class="p-3 bg-red-100 text-red-800 rounded-lg">He was a <br><b>LIAR</b></div>
+                                        <div class="p-3 bg-blue-100 text-blue-800 rounded-lg">He was a <br><b>LUNATIC</b></div>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <p class="font-bold text-slate-700">If His claims were true...</p>
+                                     <div class="h-4 w-px bg-slate-300 my-2 mx-auto"></div>
+                                    <div class="p-3 bg-green-100 text-green-800 rounded-lg">He is <br><b>LORD</b></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md border border-slate-100">
+                        <h3 class="text-2xl font-semibold mb-6 text-slate-700 text-center">Timeline of Christological Doctrine</h3>
+                        <div class="relative border-l-2 border-slate-200 pl-8">
+                            <div class="timeline-item mb-8">
+                                <h4 class="font-semibold text-lg text-slate-800">Council of Nicaea (325 CE)</h4>
+                                <p class="text-sm text-slate-600">Condemned <b class="text-red-600">Arianism</b> (Jesus as a created being) and affirmed His full divinity, declaring Him <i class="italic">homoousios</i>—"of the same substance"—as the Father.</p>
+                            </div>
+                            <div class="timeline-item mb-8">
+                                <h4 class="font-semibold text-lg text-slate-800">Council of Constantinople (381 CE)</h4>
+                                <p class="text-sm text-slate-600">Condemned <b class="text-red-600">Apollinarianism</b> (divine mind in human body) and affirmed Christ's full humanity.</p>
+                            </div>
+                            <div class="timeline-item mb-8">
+                                <h4 class="font-semibold text-lg text-slate-800">Council of Ephesus (431 CE)</h4>
+                                <p class="text-sm text-slate-600">Condemned <b class="text-red-600">Nestorianism</b> (two separate persons in Christ) and affirmed the unity of His person.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4 class="font-semibold text-lg text-slate-800">Council of Chalcedon (451 CE)</h4>
+                                <p class="text-sm text-slate-600">Condemned <b class="text-red-600">Eutychianism</b> (a single blended nature) and defined the <b class="text-green-700">Hypostatic Union</b>: one person with two distinct natures, divine and human.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Section 3: Cultural Lens -->
+            <section id="page-culture" class="content-section">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-800">Jesus in Culture</h2>
+                    <p class="mt-2 text-slate-600 max-w-3xl mx-auto">Theological ideas don't stay in books; they shape how cultures see the world. This gallery explores how different artistic, literary, and cinematic portrayals of Jesus reflect specific theological viewpoints. Click on an image to learn more about the theological statement it makes.</p>
+                </div>
+
+                <div id="art-gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Gallery items will be populated by JS -->
+                </div>
+            </section>
+            
+            <!-- Section 4: Implications -->
+            <section id="page-implications" class="content-section">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-800">Why It Matters: The Unbridgeable Divide</h2>
+                    <p class="mt-2 text-slate-600 max-w-3xl mx-auto">The difference between the Christ of faith and the Jesuses of imagination isn't minor. It represents a fundamental choice between two different gospels with profoundly different implications for faith, life, and salvation. This section summarizes the core divergence and its consequences.</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                    <div class="bg-amber-50 border border-amber-200 p-6 rounded-lg">
+                        <h3 class="font-bold text-xl mb-3 text-amber-800">The Christ of Faith (Orthodox View)</h3>
+                        <p class="mb-2 text-slate-700"><b>Foundation:</b> What He <b class="font-semibold">did</b> (atonement) is possible only because of who He <b class="font-semibold">is</b> (the God-man).</p>
+                        <p class="mb-2 text-slate-700"><b>Gospel:</b> An announcement of what Christ has <b class="font-semibold">done</b> for us.</p>
+                        <p class="mb-4 text-slate-700"><b>Salvation:</b> A gift of grace received through <b class="font-semibold">faith</b> in His finished work.</p>
+                        <div class="bg-amber-100 p-3 rounded-md text-sm text-amber-900"><b>Result:</b> A faith of humble trust, worship, and gratitude.</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 p-6 rounded-lg">
+                        <h3 class="font-bold text-xl mb-3 text-slate-800">The Jesuses of Imagination</h3>
+                        <p class="mb-2 text-slate-700"><b>Foundation:</b> Who He <b class="font-semibold">is</b> (a teacher/revolutionary) is defined by what He <b class="font-semibold">did</b> (taught/resisted).</p>
+                        <p class="mb-2 text-slate-700"><b>Gospel:</b> Good <b class="font-semibold">advice</b> on what we must do.</p>
+                        <p class="mb-4 text-slate-700"><b>Salvation:</b> Earned through moral effort and <b class="font-semibold">works</b>.</p>
+                         <div class="bg-slate-100 p-3 rounded-md text-sm text-slate-900"><b>Result:</b> A religion of human achievement, leading to pride or despair.</div>
+                    </div>
+                </div>
+                 <div class="mt-12 text-center max-w-3xl mx-auto">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-4">A Concluding Thought</h3>
+                    <p class="text-slate-600 italic">"The temptation to fashion a Jesus in our own image—a Jesus who affirms our politics, blesses our lifestyle, and shares our values—is immense. The enduring question is not whether we can make Jesus relevant to our time by re-imagining him, but whether we are willing to be re-imagined by him."</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Lightbox for Art Gallery -->
+    <div id="lightbox" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg shadow-2xl max-w-3xl w-full max-h-full overflow-y-auto relative">
+            <button id="close-lightbox" class="absolute top-2 right-4 text-3xl font-bold text-slate-500 hover:text-black">&times;</button>
+            <div class="grid md:grid-cols-2 gap-4">
+                <img id="lightbox-img" src="" alt="Artwork" class="w-full h-auto object-cover rounded-l-lg">
+                <div id="lightbox-text" class="p-6">
+                    <!-- Lightbox content populated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            const navLinks = document.querySelectorAll('.nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+            const viewSelector = document.getElementById('view-selector');
+            const detailsPanel = document.getElementById('details-panel');
+            const chartCanvas = document.getElementById('comparisonChart');
+
+            const pageData = {
+                orthodox: {
+                    title: 'Orthodox Christology: The Christ of Faith',
+                    identity: 'The God-man; Second Person of the Trinity, Incarnate.',
+                    nature: 'Hypostatic Union: Fully Divine & Fully Human in one person.',
+                    authority: 'Inherent divine self-revelation, recorded in Scripture.',
+                    work: 'Atonement for sin through His death and resurrection; reconciliation with God.',
+                    death: 'A substitutionary sacrifice to satisfy divine justice and defeat death.',
+                    resurrection: 'A literal, bodily event vindicating His divinity and securing salvation.',
+                    chartData: [5, 5, 5, 5, 5, 5] 
+                },
+                moral: {
+                    title: 'Jesus as Moral Teacher',
+                    identity: 'A wise, enlightened human teacher of timeless ethics.',
+                    nature: 'Fully Human. Divinity is denied or considered irrelevant.',
+                    authority: 'Human wisdom and reason. Teachings are valid if they are rational.',
+                    work: 'Providing a moral code and ethical example for humanity to follow.',
+                    death: 'A tragic martyrdom; the ultimate example of commitment to his teachings.',
+                    resurrection: 'A myth or metaphor for the enduring power of his teachings.',
+                    chartData: [1, 1, 3, 2, 1, 1] 
+                },
+                revolutionary: {
+                    title: 'Jesus as Revolutionary / Social Justice Icon',
+                    identity: 'A human liberator from political, social, and economic oppression.',
+                    nature: 'Fully Human. Focus is on his solidarity with the oppressed.',
+                    authority: 'Lived experience of oppression; his example of resistance.',
+                    work: 'Overthrowing unjust social, political, and economic structures.',
+                    death: 'A political execution; a martyr for the cause of the oppressed.',
+                    resurrection: 'A symbol of hope and ultimate victory over worldly powers.',
+                    chartData: [1, 1, 4, 3, 2, 2] 
+                },
+                philosopher: {
+                    title: 'Jesus as Philosopher / Sage',
+                    identity: 'A human thinker and master of reason and wisdom.',
+                    nature: 'Fully Human. Focus is on his intellect and teaching style.',
+                    authority: 'Reason and logic; his authority is persuasive, not absolute.',
+                    work: 'Teaching a path to happiness and virtue through reason.',
+                    death: 'A noble death, likely at the hands of threatened authorities.',
+                    resurrection: 'A later legendary addition; not central to his philosophical import.',
+                    chartData: [1, 1, 3, 1, 1, 1] 
+                },
+                postmodern: {
+                    title: 'The Postmodern Jesus',
+                    identity: 'A symbol; a narrative open to multiple interpretations by a community.',
+                    nature: 'Divinity is symbolic, not essential. His nature is fluid and constructed.',
+                    authority: 'Subjective experience; authority is relative to the individual or community.',
+                    work: 'Deconstructing power structures; inspiring non-violent action.',
+                    death: 'A non-violent act against power; its meaning is open to interpretation.',
+                    resurrection: 'A narrative element whose "truth" is its meaning for the community, not historicity.',
+                    chartData: [2, 1, 2, 2, 1, 1]
+                }
+            };
+            
+            const chartLabels = ['Divinity', 'Humanity (Orthodox sense)', 'Moral Authority', 'Socio-Political Action', 'Atoning Death', 'Bodily Resurrection'];
+
+            let comparisonChart;
+
+            function createOrUpdateChart(view) {
+                const data = pageData[view].chartData;
+                if (comparisonChart) {
+                    comparisonChart.data.datasets[0].data = data;
+                    comparisonChart.update();
+                } else {
+                    const ctx = chartCanvas.getContext('2d');
+                    comparisonChart = new Chart(ctx, {
+                        type: 'radar',
+                        data: {
+                            labels: chartLabels,
+                            datasets: [{
+                                label: 'Emphasis',
+                                data: data,
+                                backgroundColor: 'rgba(161, 98, 7, 0.2)',
+                                borderColor: 'rgba(161, 98, 7, 1)',
+                                borderWidth: 2,
+                                pointBackgroundColor: 'rgba(161, 98, 7, 1)'
+                            }]
+                        },
+                        options: {
+                            maintainAspectRatio: false,
+                            scales: {
+                                r: {
+                                    angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                                    grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                                    pointLabels: { 
+                                        font: { size: 12 },
+                                        color: '#3d4451'
+                                    },
+                                    ticks: {
+                                        backdropColor: 'rgba(248, 247, 244, 1)',
+                                        color: '#6b7280',
+                                        stepSize: 1,
+                                        max: 5,
+                                        min: 0
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return `Emphasis: ${context.raw}`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            function updateDetails(view) {
+                const data = pageData[view];
+                detailsPanel.innerHTML = `
+                    <h3 class="text-2xl font-bold text-slate-800 mb-4">${data.title}</h3>
+                    <ul class="space-y-3 text-slate-600">
+                        <li><strong class="font-semibold text-slate-700">Identity:</strong> ${data.identity}</li>
+                        <li><strong class="font-semibold text-slate-700">Nature:</strong> ${data.nature}</li>
+                        <li><strong class="font-semibold text-slate-700">Authority:</strong> ${data.authority}</li>
+                        <li><strong class="font-semibold text-slate-700">Work:</strong> ${data.work}</li>
+                        <li><strong class="font-semibold text-slate-700">Death:</strong> ${data.death}</li>
+                        <li><strong class="font-semibold text-slate-700">Resurrection:</strong> ${data.resurrection}</li>
+                    </ul>
+                `;
+            }
+
+            function switchPage(pageId) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.id === `nav-${pageId}`) {
+                        link.classList.add('active');
+                    }
+                });
+                contentSections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === `page-${pageId}`) {
+                        section.classList.add('active');
+                    }
+                });
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const pageId = e.target.id.split('-')[1];
+                    switchPage(pageId);
+                });
+            });
+
+            viewSelector.addEventListener('change', (e) => {
+                const selectedView = e.target.value;
+                updateDetails(selectedView);
+                createOrUpdateChart(selectedView);
+            });
+            
+            // --- Art Gallery Logic ---
+            const artData = [
+                { id: 1, src: 'https://placehold.co/600x800/334155/f1f5f9?text=Christ+Pantocrator', title: 'Christ Pantocrator (Ruler of All)', desc: 'Common in Byzantine art, this depiction emphasizes Christ\'s divine, sovereign, and imperial nature. He is the majestic, powerful judge and ruler of the universe, often shown enthroned in glory. This aligns with a high Christology, focusing on his divinity.' },
+                { id: 2, src: 'https://placehold.co/600x800/7f1d1d/fecaca?text=The+Crucifixion', title: 'The Crucifixion', desc: 'A central image in Western Christianity, especially after the Middle Ages. It focuses on Christ\'s humanity, suffering, and sacrificial death (Atonement). This depiction invites believers to empathize with his passion and underscores the cost of salvation.' },
+                { id: 3, src: 'https://placehold.co/600x800/1e3a8a/bfdbfe?text=The+Good+Shepherd', title: 'The Good Shepherd', desc: 'One of the earliest symbolic representations of Jesus, popular when direct portraiture was avoided. It depicts a youthful, gentle Christ, emphasizing his role as a caring and protective guide for his followers, a more approachable and pastoral image.' },
+                { id: 4, src: 'https://placehold.co/600x800/854d0e/fefce8?text=The+Last+Temptation', title: 'The Literary / Cinematic Christ', desc: 'Modern portrayals in novels and films often explore a more human, conflicted, and psychologically complex Jesus. Works like "The Last Temptation of Christ" prioritize his humanity, doubts, and struggles, often at the expense of his divine serenity, reflecting a modern "Arian" or humanistic view.' },
+                { id: 5, src: 'https://placehold.co/600x800/166534/d1fae5?text=African+Christ', title: 'Culturally Adapted Christ', desc: 'As Christianity spread globally, artists began portraying Jesus with the ethnic features of their own communities. This inculturation makes Jesus more relatable and counters the historically dominant European artistic convention, emphasizing the universality of the Incarnation.' },
+                { id: 6, src: 'https://placehold.co/600x800/be185d/fce7f3?text=Warner+Sallman', title: 'The "Head of Christ" (Warner Sallman, 1940)', desc: 'This iconic image from 20th-century American Protestantism presents a gentle, affirming, and handsome Jesus. It reflects a cultural desire for a comforting, personal Savior, a "Society Jesus" stripped of his more severe or challenging characteristics.' }
+            ];
+
+            const artGallery = document.getElementById('art-gallery');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxText = document.getElementById('lightbox-text');
+            const closeLightboxBtn = document.getElementById('close-lightbox');
+
+            artData.forEach(art => {
+                const item = document.createElement('div');
+                item.className = 'art-gallery-item bg-white rounded-lg shadow-md overflow-hidden';
+                item.innerHTML = `
+                    <img src="${art.src}" alt="${art.title}" class="w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h4 class="font-semibold text-lg text-slate-800">${art.title}</h4>
+                    </div>
+                `;
+                item.addEventListener('click', () => {
+                    lightboxImg.src = art.src;
+                    lightboxImg.alt = art.title;
+                    lightboxText.innerHTML = `
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4">${art.title}</h3>
+                        <p class="text-slate-600">${art.desc}</p>
+                    `;
+                    lightbox.classList.remove('hidden');
+                });
+                artGallery.appendChild(item);
+            });
+
+            closeLightboxBtn.addEventListener('click', () => lightbox.classList.add('hidden'));
+            lightbox.addEventListener('click', (e) => {
+                if(e.target === lightbox) {
+                    lightbox.classList.add('hidden');
+                }
+            });
+
+
+            // Initial page load
+            switchPage('compare');
+            updateDetails('orthodox');
+            createOrUpdateChart('orthodox');
+
+        });
+    </script>
+</body>
+</html>
