@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reformed Spirituality: An Interactive Exploration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+    
+    <!-- 
+    Chosen Palette: Warm Parchment. A calming and academic palette using a light, warm neutral (parchment/beige) for the background, a dark, rich brown for primary text to ensure readability, and a muted gold/ochre for accents and interactive highlights. This combination feels both historic and welcoming.
+    -->
+    <!-- 
+    Application Structure Plan: The SPA is designed as a narrative journey, guiding the user from foundational definitions to contemporary practice. The structure is thematic, not linear like the PDF, to improve understanding. It uses a top navigation bar for direct access to key sections (Foundations, History, Practice, Global View). The flow is: 1) Hero & Core Definition to ground the user. 2) Theological Foundations to establish core beliefs. 3) Historical Journey to provide context. 4) The Practice of Faith to show application. 5) Global & Modern Context to demonstrate relevance. 6) A comparison table for broader understanding. This layered approach allows users to either follow the narrative or jump to their area of interest, making exploration intuitive and user-driven.
+    -->
+    <!-- 
+    Visualization & Content Choices: 
+    - Report Info: Global Distribution Data (Page 9). Goal: Inform. Viz: Horizontal Bar Chart. Interaction: Tooltips on hover. Justification: A bar chart is the clearest way to compare quantities across categories, directly matching the source. Library: Chart.js.
+    - Report Info: Theological Pillars Pyramid (Page 10). Goal: Organize/Show Hierarchy. Viz: Custom HTML/CSS Pyramid Diagram. Interaction: Hover effect on layers to highlight them. Justification: A custom diagram is more engaging and web-native than a static image, and reinforces the foundational concept visually. Method: HTML/CSS.
+    - Report Info: Historical Timeline (Pages 4, 5, 6, 8). Goal: Show Change Over Time. Viz: Vertical Timeline Layout. Interaction: Scroll-based discovery. Justification: A timeline effectively visualizes chronological progression. Method: HTML/CSS.
+    - Report Info: Comparison with other traditions (Page 20). Goal: Compare. Viz: Styled HTML Table. Interaction: Hover highlight on rows. Justification: A table is the most direct and readable format for comparing attributes across multiple items. Method: HTML/Tailwind.
+    - Report Info: Key concepts (Union with Christ, Means of Grace, etc.). Goal: Inform/Organize. Viz: Interactive cards and icon-based feature lists. Interaction: Hover effects. Justification: Cards break down complex information into digestible, visually distinct chunks. Method: HTML/Tailwind.
+    -->
+    <!-- 
+    CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. 
+    -->
+
+    <style>
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background-color: #F5F5DC; /* Parchment */
+            color: #4B382A; /* Dark Brown */
+        }
+        h1, h2, h3, .font-lora {
+            font-family: 'Lora', serif;
+        }
+        .accent-gold {
+            color: #B8860B; /* DarkGoldenRod */
+        }
+        .bg-accent-gold {
+            background-color: #B8860B;
+        }
+        .border-accent-gold {
+            border-color: #B8860B;
+        }
+        .nav-link {
+            transition: color 0.3s, border-color 0.3s;
+        }
+        .nav-link:hover {
+            color: #B8860B;
+            border-color: #B8860B;
+        }
+        .pyramid-layer {
+            position: relative;
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+            background-color: #D2B48C; /* Tan */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: transform 0.3s ease-in-out, background-color 0.3s;
+            cursor: pointer;
+        }
+        .pyramid-layer:hover {
+            background-color: #B8860B;
+            transform: scale(1.05);
+            z-index: 10;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#F5F5DC] text-[#4B382A]">
+
+    <!-- Header & Navigation -->
+    <header id="header" class="bg-[#F5F5DC] shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold font-lora">Reformed Spirituality</h1>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#foundations" class="nav-link border-b-2 border-transparent pb-1">Foundations</a>
+                <a href="#history" class="nav-link border-b-2 border-transparent pb-1">History</a>
+                <a href="#practice" class="nav-link border-b-2 border-transparent pb-1">Practice</a>
+                <a href="#global" class="nav-link border-b-2 border-transparent pb-1">Global View</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative h-[60vh] flex items-center justify-center text-white text-center px-4" style="background-image: url('https://images.unsplash.com/photo-1504151835359-62a237683434?q=80&w=2669&auto=format&fit=crop'); background-size: cover; background-position: center;">
+        <div class="absolute inset-0 bg-black opacity-60"></div>
+        <div class="relative z-10">
+            <h1 class="text-4xl md:text-6xl font-lora mb-4">A Comprehensive Understanding</h1>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto">An interactive journey through the theological foundations, historical development, and contemporary expressions of Reformed spirituality.</p>
+        </div>
+    </section>
+
+    <main class="container mx-auto px-6 py-16">
+
+        <!-- Core Definition -->
+        <section class="max-w-4xl mx-auto text-center mb-20">
+            <h2 class="text-3xl font-lora mb-6">Core Definition of Reformed Spirituality</h2>
+            <blockquote class="bg-white/60 p-8 rounded-lg shadow-lg border-l-4 border-accent-gold">
+                <p class="text-xl italic leading-relaxed text-[#4B382A]">
+                    "At its heart, Reformed spirituality (piety) can be defined as the faithful stewardship of the relationship God graciously establishes with believers, lived according to the authoritative guidance of Scripture by the power of the Holy Spirit."
+                </p>
+            </blockquote>
+        </section>
+
+        <!-- Foundations Section -->
+        <section id="foundations" class="mb-20 pt-16 -mt-16">
+            <h2 class="text-4xl font-lora text-center mb-12">Foundations of Faith</h2>
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <p>This section explores the core theological pillars that form the bedrock of Reformed spirituality. These doctrines are not merely intellectual exercises; they are foundational truths intended to shape a believer's entire life, fostering a deep, personal relationship with God.</p>
+            </div>
+            
+            <!-- Theological Pillars -->
+            <div class="mb-16">
+                 <h3 class="text-3xl font-lora text-center mb-8">Theological Pillars</h3>
+                 <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="max-w-lg mx-auto aspect-[4/3] flex flex-col">
+                        <div class="pyramid-layer w-1/4 h-1/4 mx-auto flex-shrink-0">
+                            <span class="text-white text-xs sm:text-sm font-bold p-1">1. Theology Shapes Life</span>
+                        </div>
+                        <div class="pyramid-layer w-1/2 h-1/4 mx-auto -mt-2 flex-shrink-0">
+                            <span class="text-white text-sm sm:text-base font-bold p-1">2. God's Sovereignty</span>
+                        </div>
+                        <div class="pyramid-layer w-3/4 h-1/4 mx-auto -mt-4 flex-shrink-0">
+                             <span class="text-white text-base sm:text-lg font-bold p-2">3. Covenant Theology</span>
+                        </div>
+                        <div class="pyramid-layer w-full h-1/4 mx-auto -mt-6 flex-shrink-0">
+                             <span class="text-white text-lg sm:text-xl font-bold p-2">4. Doctrines of Grace</span>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-lora text-lg font-bold">1. Theology Shapes Life</h4>
+                            <p class="text-[#4B382A] italic">"Sound doctrine precedes holy living."</p>
+                        </div>
+                        <div>
+                            <h4 class="font-lora text-lg font-bold">2. God's Sovereignty</h4>
+                            <p class="text-[#4B382A] italic">"Absolute ruler over all creation."</p>
+                        </div>
+                        <div>
+                            <h4 class="font-lora text-lg font-bold">3. Covenant Theology</h4>
+                            <p class="text-[#4B382A] italic">"God relates through covenants."</p>
+                        </div>
+                        <div>
+                            <h4 class="font-lora text-lg font-bold">4. Doctrines of Grace</h4>
+                            <p class="text-[#4B382A] italic">"Salvation entirely God's work."</p>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- Personal Intimacy with God -->
+                <div>
+                    <h3 class="text-2xl font-lora mb-4 accent-gold">Personal Intimacy with God</h3>
+                    <p class="mb-4">Reformed spirituality prizes a warm, personal, and loving relationship with the Triune God, rooted in God's objective work but meant to be subjectively and experientially realized.</p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start"><span class="accent-gold font-bold mr-3">✔</span> <span><b>Beyond Intellectual Assent:</b> More than just theological knowledge.</span></li>
+                        <li class="flex items-start"><span class="accent-gold font-bold mr-3">✔</span> <span><b>Warm Relationship:</b> A personal "I-Thou" connection.</span></li>
+                        <li class="flex items-start"><span class="accent-gold font-bold mr-3">✔</span> <span><b>Assurance of Adoption:</b> Security in being God's children.</span></li>
+                    </ul>
+                </div>
+
+                <!-- Union with Christ -->
+                <div>
+                    <h3 class="text-2xl font-lora mb-4 accent-gold">Union with Christ</h3>
+                    <p class="mb-4">This is the central experience from which all saving benefits flow. The believer is "in Christ" and Christ dwells in the believer.</p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start"><span class="accent-gold font-bold mr-3">✔</span> <span><b>Fountainhead:</b> All saving benefits flow from this union.</span></li>
+                        <li class="flex items-start"><span class="accent-gold font-bold mr-3">✔</span> <span><b>Spiritual Reality:</b> Basis for communion with God.</span></li>
+                        <li class="flex items-start"><span class="accent-gold font-bold mr-3">✔</span> <span><b>Double Grace:</b> Justification and sanctification flow from it.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- History Section -->
+        <section id="history" class="mb-20 pt-16 -mt-16">
+            <h2 class="text-4xl font-lora text-center mb-12">The Historical Journey</h2>
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                 <p>Explore the rich history of Reformed spirituality, from its origins in the 16th-century Protestant Reformation to its key developments and influential figures. This journey shows a continuous effort to align Christian life and worship with the teachings of Scripture.</p>
+            </div>
+            <!-- Timeline -->
+            <div class="relative max-w-4xl mx-auto">
+                <div class="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-0.5 bg-[#D2B48C]"></div>
+                
+                <div class="relative mb-8">
+                    <div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-accent-gold ring-4 ring-[#F5F5DC] z-10"></div>
+                    <div class="md:w-1/2 md:pr-8 md:text-right">
+                        <h3 class="text-xl font-lora">16th Century: The Reformation</h3>
+                        <p class="text-sm accent-gold">Martin Luther, Huldrych Zwingli, John Calvin</p>
+                        <p class="mt-1">A profound reorientation of Christian piety, shifting focus from monasteries to faithful living in everyday life according to Scripture.</p>
+                    </div>
+                </div>
+
+                <div class="relative mb-8 flex md:justify-end">
+                     <div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-accent-gold ring-4 ring-[#F5F5DC] z-10"></div>
+                     <div class="md:w-1/2 md:pl-8">
+                        <h3 class="text-xl font-lora">17th Century: Further Reformation</h3>
+                        <p class="text-sm accent-gold">Puritanism (England) & Nadere Reformatie (Dutch)</p>
+                        <p class="mt-1">Sought further "purification" of worship and life, emphasizing experiential piety, practical godliness, and a Scripture-centered approach.</p>
+                    </div>
+                </div>
+
+                 <div class="relative mb-8">
+                    <div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-accent-gold ring-4 ring-[#F5F5DC] z-10"></div>
+                    <div class="md:w-1/2 md:pr-8 md:text-right">
+                        <h3 class="text-xl font-lora">Later Influences</h3>
+                        <p class="text-sm accent-gold">Pietism, Evangelicalism, Neo-Calvinism</p>
+                        <p class="mt-1">Movements that variously emphasized heartfelt faith, personal conversion, evangelism, and the application of a Reformed worldview to all spheres of life.</p>
+                    </div>
+                </div>
+            </div>
+             <!-- Reformed Confessions -->
+            <div class="mt-16">
+                <h3 class="text-3xl font-lora text-center mb-8">Key Reformed Confessions</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white/60 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+                        <h4 class="font-bold font-lora">Heidelberg Catechism (1563)</h4>
+                        <p class="text-sm">Organized around comfort and gratitude.</p>
+                    </div>
+                     <div class="bg-white/60 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+                        <h4 class="font-bold font-lora">Belgic Confession (1561)</h4>
+                        <p class="text-sm">A defense of Reformed beliefs in the Low Countries.</p>
+                    </div>
+                     <div class="bg-white/60 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+                        <h4 class="font-bold font-lora">Canons of Dordt (1618-19)</h4>
+                        <p class="text-sm">Responded to controversies on predestination and grace.</p>
+                    </div>
+                     <div class="bg-white/60 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+                        <h4 class="font-bold font-lora">Westminster Confession (1646)</h4>
+                        <p class="text-sm">Produced during the English Civil War period.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Practice Section -->
+        <section id="practice" class="mb-20 pt-16 -mt-16">
+            <h2 class="text-4xl font-lora text-center mb-12">The Practice of Faith</h2>
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                 <p>Reformed spirituality is not abstract; it is profoundly practical. It embraces the created world and ordinary life as the arena for living faithfully. This section covers the key practices, from corporate worship to daily work, that express this integrated vision of faith.</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white/60 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-lora accent-gold mb-2">Means of Grace</h3>
+                    <p>Connection with God is primarily through Word (especially preaching), Sacraments (Baptism and Lord's Supper), and Prayer.</p>
+                </div>
+                <div class="bg-white/60 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-lora accent-gold mb-2">Corporate Worship</h3>
+                    <p>A God-centered covenantal encounter, structured by the Regulative Principle (only what Scripture commands) with preaching as central.</p>
+                </div>
+                <div class="bg-white/60 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-lora accent-gold mb-2">Vocation & Stewardship</h3>
+                    <p>All legitimate work is a "calling" from God. Believers are stewards of all God-given resources for His glory and others' benefit.</p>
+                </div>
+                <div class="bg-white/60 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-lora accent-gold mb-2">Personal Disciplines</h3>
+                    <p>Includes Scripture engagement (reading, study, meditation) and regular prayer (adoration, confession, thanksgiving, petition).</p>
+                </div>
+                <div class="bg-white/60 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-lora accent-gold mb-2">Family Worship</h3>
+                    <p>The "domestic church," where faith is nurtured through regular Scripture reading, prayer, singing, and doctrinal instruction (catechesis).</p>
+                </div>
+                <div class="bg-white/60 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-lora accent-gold mb-2">Works of Mercy</h3>
+                    <p>Flowing from love for God and neighbor, practical acts of compassion for those in need are essential expressions of genuine faith.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Global View Section -->
+        <section id="global" class="mb-20 pt-16 -mt-16">
+            <h2 class="text-4xl font-lora text-center mb-12">Global & Contemporary Context</h2>
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                 <p>From its European roots, the Reformed tradition has spread across the globe. This section provides a snapshot of its international presence and examines how its core tenets interact with the challenges of the modern world, offering resources for navigating contemporary culture.</p>
+            </div>
+            
+            <div class="bg-white/60 p-6 sm:p-8 rounded-lg shadow-xl">
+                 <h3 class="text-2xl font-lora text-center mb-6">Reformed Churches: Global Distribution</h3>
+                 <div class="chart-container">
+                    <canvas id="globalDistributionChart"></canvas>
+                </div>
+            </div>
+
+            <div class="mt-12 grid md:grid-cols-3 gap-8 text-center">
+                <div >
+                    <h4 class="font-lora text-xl mb-2 accent-gold">Modern Challenges</h4>
+                    <p>Individualism, distrust of authority, anti-intellectualism, and subjective truth claims clash with Reformed thought.</p>
+                </div>
+                 <div >
+                    <h4 class="font-lora text-xl mb-2 accent-gold">Reformed Resources</h4>
+                    <p>Offers objective authority in Scripture, community, intellectual rigor, and a focus on God's sovereignty amid cultural challenges.</p>
+                </div>
+                 <div >
+                    <h4 class="font-lora text-xl mb-2 accent-gold">Potential Pitfalls</h4>
+                    <p>Strengths can become weaknesses if doctrine is perceived as rigid, cold, or detached from lived experience and personal warmth.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Table -->
+        <section class="mb-20">
+            <h2 class="text-4xl font-lora text-center mb-12">In Dialogue with Other Traditions</h2>
+            <div class="bg-white/60 rounded-lg shadow-xl overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-stone-200/50">
+                        <tr>
+                            <th class="p-4 font-lora">Tradition</th>
+                            <th class="p-4 font-lora">Core Distinctives</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-t border-stone-200 hover:bg-stone-100/50">
+                            <td class="p-4 font-bold accent-gold">Reformed</td>
+                            <td class="p-4">Scripture alone; faith alone; spiritual presence; Word-centered; covenant theology.</td>
+                        </tr>
+                        <tr class="border-t border-stone-200 hover:bg-stone-100/50">
+                            <td class="p-4 font-bold">Catholic</td>
+                            <td class="p-4">Scripture + Tradition + Magisterium; faith + works; transubstantiation; seven sacraments.</td>
+                        </tr>
+                        <tr class="border-t border-stone-200 hover:bg-stone-100/50">
+                            <td class="p-4 font-bold">Lutheran</td>
+                            <td class="p-4">Scripture alone; faith alone; real presence ("in, with, under"); normative worship.</td>
+                        </tr>
+                        <tr class="border-t border-stone-200 hover:bg-stone-100/50">
+                            <td class="p-4 font-bold">Evangelical</td>
+                            <td class="p-4">Biblical authority; decision-centric; memorial communion; pragmatic worship.</td>
+                        </tr>
+                        <tr class="border-t border-stone-200 hover:bg-stone-100/50">
+                            <td class="p-4 font-bold">Orthodox</td>
+                            <td class="p-4">Scripture + Tradition; theosis; icons; mystery-centered liturgy.</td>
+                        </tr>
+                         <tr class="border-t border-stone-200 hover:bg-stone-100/50">
+                            <td class="p-4 font-bold">Pentecostal</td>
+                            <td class="p-4">Scripture + revelation; Spirit baptism; experiential worship; emotional expression.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-white/50 text-center py-8 border-t border-stone-200">
+        <p class="font-lora">Cultivating a Healthy Reformed Spirituality</p>
+        <p class="max-w-2xl mx-auto mt-2 text-sm">Requires humility, recognizing dependence on God's grace; openness to learn and grow; and constant reorientation towards the ultimate goal—knowing and glorifying the Triune God.</p>
+        <p class="text-xs mt-4">Content inspired by "Reformed Spirituality: A Comprehensive Understanding" by Ajay Daram.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Chart.js: Global Distribution Chart
+            const ctx = document.getElementById('globalDistributionChart').getContext('2d');
+            const globalDistributionData = {
+                labels: ['North America', 'Europe', 'Africa', 'Asia', 'South America', 'Oceania'],
+                datasets: [{
+                    label: 'Global Distribution',
+                    data: [12500, 8500, 6500, 5500, 2000, 1000], // Approximate values from graph
+                    backgroundColor: 'rgba(184, 134, 11, 0.6)', // DarkGoldenRod with alpha
+                    borderColor: 'rgba(184, 134, 11, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            const globalDistributionChart = new Chart(ctx, {
+                type: 'bar',
+                data: globalDistributionData,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += new Intl.NumberFormat('en-US').format(context.parsed.x);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(75, 56, 42, 0.1)'
+                            },
+                            ticks: {
+                                 callback: function(value, index, values) {
+                                    if (value >= 1000) {
+                                        return value / 1000 + 'k';
+                                    }
+                                    return value;
+                                },
+                                color: '#4B382A'
+                            }
+                        },
+                        y: {
+                             grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#4B382A'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Smooth scrolling for nav links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
